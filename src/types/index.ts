@@ -9,8 +9,45 @@ export interface AuditFields {
 
 // Status types
 export type EntityStatus = 'active' | 'inactive' | 'paused';
+export type ProductStatus = 'active' | 'inactive' | 'hide' | 'deleted';
 export type UOMType = 'Kg' | 'mg' | 'Lit' | 'ml' | 'units';
 export type YesNo = 'yes' | 'no';
+
+// Import validation types
+export type ValidationStatus = 'accepted' | 'error' | 'warning';
+export type ImportAction = 'insert' | 'update' | 'skip';
+export type MissingProductAction = 'show' | 'hide' | 'delete' | 'deactivate';
+
+export interface ValidationResult {
+  status: ValidationStatus;
+  action: ImportAction;
+  errors: string[];
+  warnings: string[];
+  remark: string;
+}
+
+export interface ValidatedProduct extends ProductSKU {
+  validation: ValidationResult;
+  rowIndex: number;
+}
+
+export interface ValidationSummary {
+  totalRows: number;
+  acceptedRows: number;
+  errorRows: number;
+  warningRows: number;
+  insertCount: number;
+  updateCount: number;
+  skipCount: number;
+  missingProducts: ProductSKU[];
+  validatedProducts: ValidatedProduct[];
+}
+
+export interface MissingProductsDialog {
+  products: ProductSKU[];
+  selectedAction: MissingProductAction;
+  isOpen: boolean;
+}
 
 // Category interface
 export interface Category extends AuditFields {
@@ -31,20 +68,29 @@ export interface ProductGroup extends AuditFields {
 // Product SKU interface
 export interface ProductSKU extends AuditFields {
   id: string;
-  product_sku_name: string;
-  product_sku_id: string;
-  uom: UOMType;
-  uom_value: number;
-  is_box: YesNo;
-  in_box_units?: number;
-  is_combo: YesNo;
-  parent_product_sku_id?: string;
-  sku_status: EntityStatus;
-  product_sku_image?: string;
-  product_group_id: string;
-  product_group?: ProductGroup;
-  parent_sku?: ProductSKU;
-  combo_items?: ProductSKU[];
+  business_id: string; // tenant_id (not shown in table)
+  pricelist_id: string;
+  pricelist_upload_date: string;
+  pricelist_name: string;
+  product_group: string;
+  product_catg: string;
+  product_name: string;
+  product_description: string;
+  product_uom: UOMType;
+  product_uom_value: number;
+  business_product_id: string;
+  box_units: number;
+  parent_product_id?: string;
+  product_status: 'active' | 'inactive' | 'hide' | 'deleted';
+  currency: string;
+  product_mrp: number;
+  sgst: number;
+  cgst: number;
+  igst: number;
+  dealer_price: number;
+  product_updated_by: string;
+  product_verified_by: string;
+  product_remark?: string;
 }
 
 // Hierarchical product view for table display
@@ -157,13 +203,12 @@ export interface Tenant {
 
 // Filter and search types
 export interface ProductFilters {
-  category_id?: string;
-  group_id?: string;
-  status?: EntityStatus;
-  search?: string;
-  uom?: UOMType;
-  is_combo?: YesNo;
-  is_box?: YesNo;
+  pricelist_id?: string;
+  product_group?: string;
+  product_name?: string;
+  product_uom?: string;
+  product_status?: ProductStatus;
+  currency?: string;
 }
 
 export interface SortConfig {

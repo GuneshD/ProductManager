@@ -24,11 +24,12 @@ const ProductsPage: React.FC = () => {
 
   const [filters, setFilters] = useState<ProductFilters>({
     search: undefined,
-    status: undefined,
-    uom: undefined,
-    group_id: undefined,
-    is_box: undefined,
-    is_combo: undefined
+    product_status: undefined,
+    product_uom: undefined,
+    product_group: undefined,
+    product_catg: undefined,
+    pricelist_id: undefined,
+    currency: undefined
   });
 
   const [sortConfig, setSortConfig] = useState<SortConfig>({
@@ -46,15 +47,28 @@ const ProductsPage: React.FC = () => {
 
   // Table columns configuration
   const allColumns: TableColumn[] = [
-    { id: 'product_sku_name', header: t('products.name'), label: t('products.name'), key: 'product_sku_name', accessorKey: 'product_sku_name', type: 'text' },
-    { id: 'product_sku_id', header: t('products.skuId'), label: t('products.skuId'), key: 'product_sku_id', accessorKey: 'product_sku_id', type: 'text' },
-    { id: 'uom', header: t('products.uom'), label: t('products.uom'), key: 'uom', accessorKey: 'uom', type: 'text' },
-    { id: 'uom_value', header: t('products.uomValue'), label: t('products.uomValue'), key: 'uom_value', accessorKey: 'uom_value', type: 'number' },
-    { id: 'is_box', header: t('products.isBox'), label: t('products.isBox'), key: 'is_box', accessorKey: 'is_box', type: 'select' },
-    { id: 'is_combo', header: t('products.isCombo'), label: t('products.isCombo'), key: 'is_combo', accessorKey: 'is_combo', type: 'select' },
-    { id: 'product_sku_image', header: t('product.productImage'), label: t('product.productImage'), key: 'product_sku_image', accessorKey: 'product_sku_image', type: 'text' },
-    { id: 'sku_status', header: t('products.status'), label: t('products.status'), key: 'sku_status', accessorKey: 'sku_status', type: 'select' },
-    { id: 'created_at', header: t('common.createdAt'), label: t('common.createdAt'), key: 'created_at', accessorKey: 'created_at', type: 'text' }
+    { id: 'pricelist_id', header: t('products.pricelistId'), label: t('products.pricelistId'), key: 'pricelist_id', accessorKey: 'pricelist_id', type: 'text' },
+    { id: 'pricelist_upload_date', header: t('products.pricelistUploadDate'), label: t('products.pricelistUploadDate'), key: 'pricelist_upload_date', accessorKey: 'pricelist_upload_date', type: 'text' },
+    { id: 'pricelist_name', header: t('products.pricelistName'), label: t('products.pricelistName'), key: 'pricelist_name', accessorKey: 'pricelist_name', type: 'text' },
+    { id: 'product_group', header: t('products.productGroup'), label: t('products.productGroup'), key: 'product_group', accessorKey: 'product_group', type: 'text' },
+    { id: 'product_catg', header: t('products.productCategory'), label: t('products.productCategory'), key: 'product_catg', accessorKey: 'product_catg', type: 'text' },
+    { id: 'product_name', header: t('products.productName'), label: t('products.productName'), key: 'product_name', accessorKey: 'product_name', type: 'text' },
+    { id: 'product_description', header: t('products.productDescription'), label: t('products.productDescription'), key: 'product_description', accessorKey: 'product_description', type: 'text' },
+    { id: 'product_uom', header: t('products.productUom'), label: t('products.productUom'), key: 'product_uom', accessorKey: 'product_uom', type: 'text' },
+    { id: 'product_uom_value', header: t('products.productUomValue'), label: t('products.productUomValue'), key: 'product_uom_value', accessorKey: 'product_uom_value', type: 'number' },
+    { id: 'business_product_id', header: t('products.businessProductId'), label: t('products.businessProductId'), key: 'business_product_id', accessorKey: 'business_product_id', type: 'text' },
+    { id: 'box_units', header: t('products.boxUnits'), label: t('products.boxUnits'), key: 'box_units', accessorKey: 'box_units', type: 'number' },
+    { id: 'parent_product_id', header: t('products.parentProductId'), label: t('products.parentProductId'), key: 'parent_product_id', accessorKey: 'parent_product_id', type: 'text' },
+    { id: 'product_status', header: t('products.productStatus'), label: t('products.productStatus'), key: 'product_status', accessorKey: 'product_status', type: 'select' },
+    { id: 'currency', header: t('products.currency'), label: t('products.currency'), key: 'currency', accessorKey: 'currency', type: 'text' },
+    { id: 'product_mrp', header: t('products.productMrp'), label: t('products.productMrp'), key: 'product_mrp', accessorKey: 'product_mrp', type: 'number' },
+    { id: 'sgst', header: t('products.sgst'), label: t('products.sgst'), key: 'sgst', accessorKey: 'sgst', type: 'number' },
+    { id: 'cgst', header: t('products.cgst'), label: t('products.cgst'), key: 'cgst', accessorKey: 'cgst', type: 'number' },
+    { id: 'igst', header: t('products.igst'), label: t('products.igst'), key: 'igst', accessorKey: 'igst', type: 'number' },
+    { id: 'dealer_price', header: t('products.dealerPrice'), label: t('products.dealerPrice'), key: 'dealer_price', accessorKey: 'dealer_price', type: 'number' },
+    { id: 'product_updated_by', header: t('products.productUpdatedBy'), label: t('products.productUpdatedBy'), key: 'product_updated_by', accessorKey: 'product_updated_by', type: 'text' },
+    { id: 'product_verified_by', header: t('products.productVerifiedBy'), label: t('products.productVerifiedBy'), key: 'product_verified_by', accessorKey: 'product_verified_by', type: 'text' },
+    { id: 'product_remark', header: t('products.productRemark'), label: t('products.productRemark'), key: 'product_remark', accessorKey: 'product_remark', type: 'text' }
   ];
 
   // Initialize visible columns on first render
@@ -82,16 +96,18 @@ const ProductsPage: React.FC = () => {
   const filteredProducts = products.filter(product => {
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
-      if (!product.product_sku_name.toLowerCase().includes(searchLower) &&
-          !product.product_sku_id.toLowerCase().includes(searchLower)) {
+      if (!product.product_name.toLowerCase().includes(searchLower) &&
+          !product.business_product_id.toLowerCase().includes(searchLower) &&
+          !product.product_description.toLowerCase().includes(searchLower)) {
         return false;
       }
     }
-    if (filters.status && product.sku_status !== filters.status) return false;
-    if (filters.uom && product.uom !== filters.uom) return false;
-    if (filters.group_id && product.product_group_id !== filters.group_id) return false;
-    if (filters.is_box && product.is_box !== filters.is_box) return false;
-    if (filters.is_combo && product.is_combo !== filters.is_combo) return false;
+    if (filters.product_status && product.product_status !== filters.product_status) return false;
+    if (filters.product_uom && product.product_uom !== filters.product_uom) return false;
+    if (filters.product_group && product.product_group !== filters.product_group) return false;
+    if (filters.product_catg && product.product_catg !== filters.product_catg) return false;
+    if (filters.pricelist_id && product.pricelist_id !== filters.pricelist_id) return false;
+    if (filters.currency && product.currency !== filters.currency) return false;
 
     return true;
   });
@@ -271,15 +287,6 @@ const ProductsPage: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-neutral-900">
-            {t('products.title')}
-          </h1>
-          <p className="mt-1 text-sm text-neutral-600">
-            Manage your product catalog with categories, groups, and SKUs
-          </p>
-        </div>
-        
         <div className="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-3">
           <button
             onClick={() => setShowFilters(!showFilters)}

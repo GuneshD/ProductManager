@@ -5,14 +5,14 @@ import { useTenant } from '../../contexts/TenantContext';
 import { useProducts } from '../../contexts/ProductContext';
 import { 
   Package, 
-  Upload, 
   Settings, 
   User, 
   LogOut, 
   Wifi, 
   WifiOff,
   Globe,
-  ChevronDown
+  ChevronDown,
+  Upload
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -48,16 +48,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const navigation = [
     {
-      name: t('navigation.products'),
-      href: '/products',
-      icon: Package,
-      current: location.pathname === '/products' || location.pathname === '/'
-    },
-    {
       name: t('navigation.import'),
       href: '/import',
       icon: Upload,
       current: location.pathname === '/import'
+    },
+    {
+      name: t('navigation.products'),
+      href: '/products',
+      icon: Package,
+      current: location.pathname === '/products' || location.pathname === '/'
     }
   ];
 

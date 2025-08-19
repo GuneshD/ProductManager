@@ -1,0 +1,21 @@
+productId,name,mrp,currency,category,description
+PROD001,Wireless Headphones Updated,3299.99,INR,Electronics,Updated wireless headphones with new features
+PROD002,Smartphone Case Pro,699.99,INR,Accessories,Updated smartphone case with better protection
+NEW001,Gaming Keyboard,2499.99,INR,Electronics,Mechanical gaming keyboard with RGB
+NEW002,4K Monitor,28999.99,INR,Electronics,27-inch 4K gaming monitor
+NEW003,Webcam Pro,3999.99,INR,Electronics,Professional 4K webcam for streaming
+DUP001,Test Product,1999.99,INR,Electronics,First instance of duplicate
+DUP001,Test Product Duplicate,2499.99,INR,Electronics,Duplicate product ID - should show error
+ERR001,Invalid Price Product,-1500.00,INR,Electronics,Product with negative price
+ERR002,No Currency Product,2999.99,,Electronics,Product missing currency
+ERR003,Wrong Currency Product,1999.99,USD,Electronics,Product with wrong currency
+ERR004,,1299.99,INR,Electronics,Product with missing name
+,Missing ID Product,999.99,INR,Electronics,Product with missing ID
+ERR005,Zero Price Product,0,INR,Electronics,Product with zero price
+ERR006,Invalid Price Format,abc123,INR,Electronics,Product with non-numeric price
+MISSING100,New Smart TV,45999.99,INR,Electronics,Brand new smart TV not in database
+MISSING101,Bluetooth Headset,1799.99,INR,Electronics,New bluetooth headset model
+MISSING102,Laptop Stand,899.99,INR,Accessories,Adjustable laptop stand - new product
+VALID001,Valid New Product,1599.99,INR,Electronics,Completely valid new product
+VALID002,Another Valid Product,2299.99,INR,Accessories,Another valid product for testing
+PROD010,Updated Tablet Stand,599.99,INR,Accessories,Updated price for existing tablet stand

@@ -1,0 +1,15 @@
+productId,name,mrp,currency,category,description
+PROD001,Wireless Headphones,2999.99,INR,Electronics,Premium wireless headphones with noise cancellation
+PROD001,Wireless Headphones Duplicate,3499.99,INR,Electronics,Duplicate product ID - should trigger validation error
+PROD011,Gaming Laptop,-50000.00,INR,Electronics,Invalid negative MRP value
+PROD012,Office Chair,abc,INR,Furniture,Invalid MRP format - not a number
+PROD013,Desk Lamp,1299.99,USD,Electronics,Currency mismatch - should be INR
+PROD014,Monitor,25999.99,EUR,Electronics,Another currency mismatch
+PROD015,,1999.99,INR,Electronics,Missing product name
+PROD016,Printer,15999.99,INR,,Missing category
+,Scanner,8999.99,INR,Electronics,Missing product ID
+PROD017,External HDD,0,INR,Electronics,Zero MRP value
+PROD018,Graphics Card,45999.99,GBP,Electronics,Unsupported currency
+PROD019,Motherboard,18999.99,INR,Electronics,Valid product for comparison
+PROD020,RAM Module,6999.99,INR,Electronics,Another valid product
+PROD021,SSD Drive,4999.99,JPY,Electronics,Japanese Yen currency mismatch

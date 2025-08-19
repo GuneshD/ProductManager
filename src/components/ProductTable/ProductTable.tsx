@@ -48,9 +48,16 @@ const ProductTable: React.FC<ProductTableProps> = ({
   const handleCellDoubleClick = (product: ProductSKU, field: keyof ProductSKU) => {
     // Only allow editing of certain fields
     const editableFields: (keyof ProductSKU)[] = [
-      'product_sku_name',
-      'uom_value',
-      'in_box_units'
+      'product_name',
+      'product_description',
+      'product_uom_value',
+      'box_units',
+      'product_mrp',
+      'sgst',
+      'cgst',
+      'igst',
+      'dealer_price',
+      'product_remark'
     ];
     
     if (!editableFields.includes(field)) {
@@ -67,7 +74,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
     let processedValue: any = editValue;
     
     // Convert value based on field type
-    if (editingCell.field === 'uom_value' || editingCell.field === 'in_box_units') {
+    if (['product_uom_value', 'box_units', 'product_mrp', 'sgst', 'cgst', 'igst', 'dealer_price'].includes(editingCell.field as string)) {
       const numValue = parseFloat(editValue);
       if (isNaN(numValue)) {
         toast.error('Please enter a valid number');
@@ -140,70 +147,33 @@ const ProductTable: React.FC<ProductTableProps> = ({
     // Format value based on column type
     let displayValue = value;
     
-    if (column.key === 'sku_status') {
+    if (column.key === 'product_status') {
       return (
         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
           value === 'active' ? 'bg-green-100 text-green-800' :
           value === 'inactive' ? 'bg-red-100 text-red-800' :
-          'bg-yellow-100 text-yellow-800'
+          value === 'hide' ? 'bg-yellow-100 text-yellow-800' :
+          value === 'deleted' ? 'bg-gray-100 text-gray-800' :
+          'bg-blue-100 text-blue-800'
         }`}>
           {String(value)}
         </span>
       );
     }
     
-    if (column.key === 'is_box' || column.key === 'is_combo') {
-      return (
-        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-          value === 'yes' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-        }`}>
-          {value === 'yes' ? t('common.yes') : t('common.no')}
-        </span>
-      );
-    }
-    
     if (column.type === 'number' && typeof value === 'number') {
-      displayValue = value.toLocaleString();
+      // Format currency and price fields
+      if (['product_mrp', 'dealer_price'].includes(column.key)) {
+        displayValue = `₹${value.toLocaleString()}`;
+      } else if (['sgst', 'cgst', 'igst'].includes(column.key)) {
+        displayValue = `${value}%`;
+      } else {
+        displayValue = value.toLocaleString();
+      }
     }
     
-    if (column.key === 'created_at' && value) {
+    if (column.key === 'pricelist_upload_date' && value) {
       displayValue = new Date(value as string).toLocaleDateString();
-    }
-    
-    // Handle image column
-    if (column.key === 'product_sku_image' && value) {
-      return (
-        <div className="flex items-center space-x-2">
-          <img
-            src={value as string}
-            alt="Product"
-            className="w-10 h-10 object-cover rounded border border-gray-300"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
-            }}
-          />
-          <button
-            onClick={() => {
-              setSelectedImage(value as string);
-              setShowImageModal(true);
-            }}
-            className="p-1 text-gray-600 hover:text-blue-600 transition-colors"
-            title="View image"
-          >
-            <Eye className="h-4 w-4" />
-          </button>
-        </div>
-      );
-    }
-    
-    // Handle empty image column
-    if (column.key === 'product_sku_image' && !value) {
-      return (
-        <span className="text-gray-400 text-sm italic">
-          No image
-        </span>
-      );
     }
 
     return (
@@ -264,7 +234,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
               }`}>
                 {columns.map((column) => {
                   const field = column.key as keyof ProductSKU;
-                  const isEditable = ['product_sku_name', 'uom_value', 'in_box_units'].includes(field as string);
+                  const isEditable = ['product_name', 'product_description', 'product_uom_value', 'box_units', 'product_mrp', 'sgst', 'cgst', 'igst', 'dealer_price', 'product_remark'].includes(field as string);
                   
                   return (
                     <td 
@@ -314,7 +284,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
             Showing {products.length} {products.length === 1 ? 'product' : 'products'}
           </p>
           <p className="text-xs text-neutral-500">
-            Double-click on name, UOM value, or box units to edit
+            Double-click on editable fields to modify values
           </p>
         </div>
       </div>

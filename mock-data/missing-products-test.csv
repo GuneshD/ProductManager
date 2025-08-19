@@ -1,0 +1,16 @@
+productId,name,mrp,currency,category,description
+MISSING001,VR Headset,29999.99,INR,Electronics,Virtual reality headset - not in database
+MISSING002,Drone Camera,45999.99,INR,Electronics,Professional drone with 4K camera - missing product
+MISSING003,Smart Doorbell,8999.99,INR,Electronics,WiFi enabled smart doorbell - new product
+MISSING004,Electric Scooter,35999.99,INR,Transportation,Electric scooter for urban commuting - missing
+MISSING005,Air Purifier,12999.99,INR,Home Appliances,HEPA air purifier - not found in database
+MISSING006,Robot Vacuum,18999.99,INR,Home Appliances,Automated robot vacuum cleaner - missing
+MISSING007,Smart Thermostat,6999.99,INR,Home Appliances,WiFi smart thermostat - new product
+MISSING008,Wireless Charger,1999.99,INR,Electronics,Qi wireless charging pad - missing from database
+MISSING009,Action Camera,15999.99,INR,Electronics,4K action camera for sports - not found
+MISSING010,Smart Light Bulb,899.99,INR,Electronics,Color changing smart LED bulb - missing product
+MISSING011,Portable Projector,22999.99,INR,Electronics,Mini portable projector - not in database
+MISSING012,Electric Kettle,2499.99,INR,Home Appliances,Smart electric kettle with temperature control - missing
+MISSING013,Fitness Scale,3999.99,INR,Health,Smart body composition scale - new product
+MISSING014,Dash Cam,7999.99,INR,Electronics,Car dashboard camera with GPS - missing
+MISSING015,Smart Plug,799.99,INR,Electronics,WiFi smart plug with scheduling - not found

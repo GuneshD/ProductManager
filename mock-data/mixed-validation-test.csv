@@ -1,0 +1,16 @@
+productId,name,mrp,currency,category,description
+PROD001,Wireless Headphones,2999.99,INR,Electronics,Premium wireless headphones - existing product update
+PROD025,Smart Watch,8999.99,INR,Electronics,New smartwatch with fitness tracking
+PROD026,Fitness Tracker,3499.99,INR,Electronics,Basic fitness tracker
+PROD027,Tablet,15999.99,INR,Electronics,10-inch tablet with stylus support
+PROD028,Laptop Bag,1299.99,INR,Accessories,Professional laptop bag
+PROD029,Phone Charger,799.99,INR,Accessories,Fast charging adapter
+PROD030,Earbuds,1999.99,INR,Electronics,True wireless earbuds
+PROD031,Gaming Controller,2499.99,INR,Electronics,Wireless gaming controller
+PROD032,Smart Home Hub,4999.99,INR,Electronics,Central hub for smart home devices
+PROD033,Security Camera,3999.99,INR,Electronics,WiFi security camera with night vision
+PROD034,Router,2799.99,INR,Electronics,High-speed WiFi router
+PROD035,External Battery,1599.99,INR,Electronics,Portable external battery pack
+PROD036,Car Mount,599.99,INR,Accessories,Universal car phone mount
+PROD037,Cleaning Kit,299.99,INR,Accessories,Electronics cleaning kit
+PROD038,Cable Organizer,199.99,INR,Accessories,Desktop cable management solution

@@ -17,11 +17,15 @@
     "no": "नाही",
     "active": "सक्रिय",
     "inactive": "निष्क्रिय",
-    "paused": "थांबवले"
+    "paused": "थांबवले",
+    "refresh": "रीफ्रेश",
+    "selectAll": "सर्व निवडा",
+    "selectNone": "काहीही निवडू नका",
+    "columns": "स्तंभ"
   },
   "navigation": {
-    "products": "उत्पादने",
     "import": "आयात",
+    "products": "उत्पादने",
     "dashboard": "डॅशबोर्ड",
     "settings": "सेटिंग्ज"
   },
@@ -29,26 +33,51 @@
     "language": "भाषा"
   },
   "products": {
-    "title": "उत्पादन व्यवस्थापक",
-    "category": "श्रेणी",
-    "group": "गट",
-    "sku": "SKU",
-    "name": "नाव",
-    "status": "स्थिती",
-    "uom": "मापाचे एकक",
-    "uomValue": "UOM मूल्य",
-    "isBox": "बॉक्स आहे",
-    "inBoxUnits": "बॉक्समधील एकके",
-    "isCombo": "कॉम्बो आहे",
-    "parentSku": "मूळ SKU",
-    "image": "प्रतिमा",
+    "title": "उत्पादने",
+    "pricelistId": "किंमत यादी ID",
+    "pricelistUploadDate": "अपलोड दिनांक",
+    "pricelistName": "किंमत यादी नाव",
+    "productGroup": "उत्पादन गट",
+    "productCategory": "श्रेणी",
+    "productName": "उत्पादन नाव",
+    "productDescription": "वर्णन",
+    "productUom": "UOM",
+    "productUomValue": "UOM मूल्य",
+    "businessProductId": "व्यवसाय उत्पादन ID",
+    "boxUnits": "बॉक्स एकके",
+    "parentProductId": "मूळ उत्पादन ID",
+    "productStatus": "स्थिती",
+    "currency": "चलन",
+    "productMrp": "MRP",
+    "sgst": "SGST",
+    "cgst": "CGST",
+    "igst": "IGST",
+    "dealerPrice": "डीलर किंमत",
+    "productUpdatedBy": "द्वारे अपडेट केले",
+    "productVerifiedBy": "द्वारे सत्यापित",
+    "productRemark": "टिप्पणी",
+    "noProducts": "कोणतेही उत्पादन सापडले नाही",
+    "confirmDelete": "तुम्हाला खरोखर हे उत्पादन हटवायचे आहे का?",
     "addProduct": "उत्पादन जोडा",
     "editProduct": "उत्पादन संपादित करा",
     "deleteProduct": "उत्पादन हटवा",
-    "confirmDelete": "तुम्हाला खरोखर हे उत्पादन हटवायचे आहे का?",
-    "productAdded": "उत्पादन यशस्वीरित्या जोडले",
-    "productUpdated": "उत्पादन यशस्वीरित्या अपडेट केले",
-    "productDeleted": "उत्पादन यशस्वीरित्या हटवले"
+    "searchPlaceholder": "उत्पादने शोधा...",
+    "filterByStatus": "स्थितीनुसार फिल्टर करा",
+    "filterByUOM": "UOM नुसार फिल्टर करा",
+    "filterByGroup": "गटानुसार फिल्टर करा",
+    "filterByCategory": "श्रेणीनुसार फिल्टर करा",
+    "filterByPricelist": "किंमत यादीनुसार फिल्टर करा",
+    "filterByCurrency": "चलनानुसार फिल्टर करा",
+    "allStatuses": "सर्व स्थिती",
+    "allUOMs": "सर्व UOM",
+    "allGroups": "सर्व गट",
+    "allCategories": "सर्व श्रेणी",
+    "allPricelists": "सर्व किंमत याद्या",
+    "allCurrencies": "सर्व चलने",
+    "active": "सक्रिय",
+    "inactive": "निष्क्रिय",
+    "hide": "लपवलेले",
+    "deleted": "हटवलेले"
   },
   "import": {
     "title": "उत्पादने आयात करा",
@@ -75,6 +104,140 @@
     "invalidEmail": "अवैध ईमेल स्वरूप",
     "minLength": "किमान {{count}} वर्ण आवश्यक",
     "maxLength": "कमाल {{count}} वर्ण अनुमतित"
+  },
+  "import": {
+    "title": "फाइल आयात करा",
+    "newImport": "नवीन आयात",
+    "processing": "प्रक्रिया करत आहे...",
+    "invalidFileType": "कृपया CSV किंवा Excel फाइल निवडा",
+    "emptyFile": "फाइल रिकामी किंवा अवैध दिसते",
+    "noValidData": "फाइलमध्ये कोणताही वैध उत्पाद डेटा सापडला नाही",
+    "uploadSuccess": "फाइल यशस्वीरित्या अपलोड झाली",
+    "uploadError": "फाइल प्रक्रियेत त्रुटी",
+    "noDataToValidate": "सत्यापनासाठी कोणताही डेटा नाही",
+    "validationError": "सत्यापनादरम्यान त्रुटी",
+    "missingProductsActionSet": "गहाळ उत्पादने क्रिया सेट",
+    "syncSuccess": "उत्पादने यशस्वीरित्या सिंक झाली",
+    "syncError": "उत्पादने सिंक करताना त्रुटी",
+    "columns": {
+      "fileName": "फाइलचे नाव",
+      "uploadDate": "अपलोड दिनांक",
+      "status": "स्थिती",
+      "recordCount": "रेकॉर्ड संख्या",
+      "actions": "क्रिया"
+    },
+    "status": {
+      "verified": "सत्यापित",
+      "pending": "प्रलंबित",
+      "error": "त्रुटी"
+    },
+    "actions": {
+      "validateProducts": "उत्पादे सत्यापित करा",
+      "validated": "सत्यापित",
+      "validating": "सत्यापन होत आहे...",
+      "validationFailed": "सत्यापन अयशस्वी",
+      "updateProducts": "उत्पादे अपडेट करा",
+      "updated": "अपडेट केले",
+      "updating": "अपडेट होत आहे...",
+      "restore": "पुनर्स्थापित करा",
+      "restored": "पुनर्स्थापित केले",
+      "restoring": "पुनर्स्थापना होत आहे..."
+    },
+    "restore": {
+      "title": "पुनर्स्थापनेची पुष्टी करा",
+      "message": "उत्पाद डेटा फाइल '{{fileName}}' च्या स्थितीत पुनर्स्थापित केला जाईल जी {{date}} रोजी अपलोड केली होती. सुरू ठेवा?"
+    }
+  },
+  "validation": {
+    "title": "उत्पाद सत्यापन परिणाम",
+    "summary": "सत्यापन सारांश",
+    "totalRecords": "एकूण रेकॉर्ड",
+    "acceptedRecords": "स्वीकृत रेकॉर्ड",
+    "errorRecords": "त्रुटी रेकॉर्ड",
+    "warningRecords": "चेतावणी रेकॉर्ड",
+    "export": "परिणाम निर्यात करा",
+    "close": "बंद करा",
+    "viewSummary": "सारांश पहा",
+    "status": {
+      "accepted": "स्वीकृत",
+      "error": "त्रुटी",
+      "warning": "चेतावणी"
+    },
+    "action": {
+      "insert": "समाविष्ट करा",
+      "update": "अपडेट करा",
+      "skip": "वगळा"
+    }
+  },
+  "validationSummary": {
+    "title": "सत्यापन सारांश",
+    "dryRunResults": "ड्राय रन परिणाम",
+    "updates": "अपडेट",
+    "inserts": "समाविष्ट",
+    "missing": "गहाळ उत्पादने",
+    "errors": "त्रुटी",
+    "productsToUpdate": "उत्पादने अपडेट केली जातील",
+    "productsToInsert": "नवीन उत्पादने जोडली जातील",
+    "productsNotFound": "उत्पादने आयातमध्ये सापडली नाहीत",
+    "productsWithErrors": "उत्पादनांमध्ये सत्यापन त्रुटी आहेत",
+    "viewMissingProducts": "गहाळ उत्पादने पहा",
+    "viewErrorLog": "त्रुटी लॉग पहा",
+    "syncToDatabase": "डेटाबेसमध्ये सिंक करा",
+    "cannotSync": "सत्यापन त्रुटींमुळे सिंक करू शकत नाही",
+    "noChanges": "सिंक करण्यासाठी कोणते बदल नाहीत"
+  },
+  "missingProducts": {
+    "title": "गहाळ उत्पादने",
+    "description": "खालील उत्पादने तुमच्या डेटाबेसमध्ये अस्तित्वात आहेत परंतु आयात फाइलमध्ये उपस्थित नाहीत. एक क्रिया निवडा:",
+    "actions": {
+      "show": "दाखवा (दृश्यमान ठेवा)",
+      "hide": "लपवा (अदृश्य करा)",
+      "delete": "हटवा (कायमचे काढून टाका)",
+      "deactivate": "निष्क्रिय करा (निष्क्रिय म्हणून चिन्हांकित करा)"
+    },
+    "actionDescriptions": {
+      "show": "उत्पादने दृश्यमान आणि सक्रिय राहतील",
+      "hide": "उत्पादने यादीतून लपवली जातील परंतु डेटा जतन केला जाईल",
+      "delete": "उत्पादने डेटाबेसमधून कायमचे काढून टाकली जातील",
+      "deactivate": "उत्पादने निष्क्रिय म्हणून चिन्हांकित केली जातील परंतु डेटा जतन केला जाईल"
+    },
+    "affectedProducts": "प्रभावित उत्पादने",
+    "confirm": "क्रियेची पुष्टी करा",
+    "cancel": "रद्द करा"
+  },
+  "errorLog": {
+    "title": "सत्यापन त्रुटी लॉग",
+    "filter": {
+      "all": "सर्व",
+      "accepted": "स्वीकृत",
+      "error": "त्रुटी",
+      "warning": "चेतावणी"
+    },
+    "export": "फिल्टर केलेले परिणाम निर्यात करा",
+    "legend": {
+      "accepted": "स्वीकृत रेकॉर्ड",
+      "rejected": "नाकारलेले रेकॉर्ड",
+      "warning": "चेतावणी रेकॉर्ड"
+    },
+    "row": "पंक्ती",
+    "status": "स्थिती",
+    "action": "क्रिया",
+    "remark": "टिप्पणी",
+    "noRecords": "निवडलेल्या फिल्टरशी कोणतेही रेकॉर्ड जुळत नाहीत",
+    "showing": "दाखवत आहे",
+    "of": "चे",
+    "records": "रेकॉर्ड"
+  },
+  "confirmation": {
+    "title": "डेटाबेस सिंकची पुष्टी करा",
+    "message": "तुम्ही सत्यापित डेटा डेटाबेसमध्ये सिंक करणार आहात. ही क्रिया पूर्ववत करता येणार नाही.",
+    "summary": "बदलांचा सारांश",
+    "updates": "अपडेट करण्याची उत्पादने:",
+    "inserts": "जोडण्याची उत्पादने:",
+    "total": "एकूण बदल:",
+    "warning": "ही क्रिया तुमचा डेटाबेस कायमचा बदलेल. कृपया खात्री करा की आवश्यकतेनुसार तुमच्याकडे बॅकअप आहे.",
+    "syncing": "सिंक करत आहे...",
+    "syncToDatabase": "डेटाबेसमध्ये सिंक करा"
   },
   "errors": {
     "networkError": "नेटवर्क त्रुटी. कृपया तुमचे कनेक्शन तपासा.",
