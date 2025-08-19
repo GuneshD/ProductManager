@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ProductSKU, TableColumn, SortConfig } from '../../types';
-import { Edit2, Trash2, ChevronUp, ChevronDown, Save, X } from 'lucide-react';
+import { Edit2, Trash2, ChevronUp, ChevronDown, Save, X, Eye, ZoomIn } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 interface ProductTableProps {
@@ -34,6 +34,8 @@ const ProductTable: React.FC<ProductTableProps> = ({
   const { t } = useTranslation();
   const [editingCell, setEditingCell] = useState<EditingCell | null>(null);
   const [editValue, setEditValue] = useState<string>('');
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -167,17 +169,45 @@ const ProductTable: React.FC<ProductTableProps> = ({
     if (column.key === 'created_at' && value) {
       displayValue = new Date(value as string).toLocaleDateString();
     }
+    
+    // Handle image column
+    if (column.key === 'product_sku_image' && value) {
+      return (
+        <div className="flex items-center space-x-2">
+          <img
+            src={value as string}
+            alt="Product"
+            className="w-10 h-10 object-cover rounded border border-gray-300"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+            }}
+          />
+          <button
+            onClick={() => {
+              setSelectedImage(value as string);
+              setShowImageModal(true);
+            }}
+            className="p-1 text-gray-600 hover:text-blue-600 transition-colors"
+            title="View image"
+          >
+            <Eye className="h-4 w-4" />
+          </button>
+        </div>
+      );
+    }
+    
+    // Handle empty image column
+    if (column.key === 'product_sku_image' && !value) {
+      return (
+        <span className="text-gray-400 text-sm italic">
+          No image
+        </span>
+      );
+    }
 
     return (
-      <span 
-        className={`${
-          ['product_sku_name', 'uom_value', 'in_box_units'].includes(field as string)
-            ? 'cursor-pointer hover:bg-blue-50 px-1 py-0.5 rounded'
-            : ''
-        }`}
-        onDoubleClick={() => handleCellDoubleClick(product, field)}
-        title={['product_sku_name', 'uom_value', 'in_box_units'].includes(field as string) ? 'Double-click to edit' : ''}
-      >
+      <span>
         {String(displayValue || '')}
       </span>
     );
@@ -185,11 +215,11 @@ const ProductTable: React.FC<ProductTableProps> = ({
 
   if (loading) {
     return (
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+      <div className="bg-white border border-neutral-200 rounded-lg overflow-hidden">
         <div className="animate-pulse">
-          <div className="h-12 bg-gray-200"></div>
+          <div className="h-12 bg-neutral-200"></div>
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-16 bg-gray-100 border-t border-gray-200"></div>
+            <div key={i} className="h-16 bg-neutral-100 border-t border-neutral-200"></div>
           ))}
         </div>
       </div>
@@ -198,22 +228,22 @@ const ProductTable: React.FC<ProductTableProps> = ({
 
   if (products.length === 0) {
     return (
-      <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
-        <p className="text-gray-500">{t('products.noProducts')}</p>
+      <div className="bg-white border border-neutral-200 rounded-lg p-8 text-center">
+        <p className="text-neutral-500">{t('products.noProducts')}</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+    <div className="bg-white border border-neutral-200 rounded-lg overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+        <table className="min-w-full divide-y divide-neutral-200">
+          <thead className="bg-deepBrown">
             <tr>
               {columns.map((column) => (
                 <th
                   key={column.key}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer hover:bg-amber-900 transition-colors"
                   onClick={() => onSort(column.key as keyof ProductSKU)}
                 >
                   <div className="flex items-center space-x-1">
@@ -222,24 +252,38 @@ const ProductTable: React.FC<ProductTableProps> = ({
                   </div>
                 </th>
               ))}
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider">
                 {t('common.actions')}
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {products.map((product) => (
-              <tr key={product.id} className="hover:bg-gray-50 transition-colors">
-                {columns.map((column) => (
-                  <td key={column.key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {renderCellContent(product, column)}
-                  </td>
-                ))}
+          <tbody className="bg-white divide-y divide-neutral-200">
+            {products.map((product, index) => (
+              <tr key={product.id} className={`transition-colors ${
+                index % 2 === 0 ? 'bg-white hover:bg-neutral-50' : 'bg-neutral-50 hover:bg-neutral-100'
+              }`}>
+                {columns.map((column) => {
+                  const field = column.key as keyof ProductSKU;
+                  const isEditable = ['product_sku_name', 'uom_value', 'in_box_units'].includes(field as string);
+                  
+                  return (
+                    <td 
+                      key={column.key} 
+                      className={`px-6 py-4 whitespace-nowrap text-sm text-neutral-900 ${
+                        isEditable ? 'cursor-pointer hover:bg-blue-50' : ''
+                      }`}
+                      onDoubleClick={isEditable ? () => handleCellDoubleClick(product, field) : undefined}
+                      title={isEditable ? 'Double-click to edit' : ''}
+                    >
+                      {renderCellContent(product, column)}
+                    </td>
+                  );
+                })}
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <div className="flex items-center justify-end space-x-2">
                     <button
                       onClick={() => onEdit(product)}
-                      className="text-blue-600 hover:text-blue-900 transition-colors"
+                      className="text-skyBlue hover:text-blue-700 transition-colors"
                       title={t('common.edit')}
                     >
                       <Edit2 className="h-4 w-4" />
@@ -264,16 +308,38 @@ const ProductTable: React.FC<ProductTableProps> = ({
       </div>
       
       {/* Table Footer with Row Count */}
-      <div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
+      <div className="bg-neutral-50 px-6 py-3 border-t border-neutral-200">
         <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-neutral-700">
             Showing {products.length} {products.length === 1 ? 'product' : 'products'}
           </p>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-neutral-500">
             Double-click on name, UOM value, or box units to edit
           </p>
         </div>
       </div>
+      
+      {/* Image Zoom Modal */}
+      {showImageModal && selectedImage && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+          <div className="relative max-w-4xl max-h-[90vh] overflow-auto">
+            <button
+              onClick={() => {
+                setShowImageModal(false);
+                setSelectedImage(null);
+              }}
+              className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
+            >
+              <X className="h-8 w-8" />
+            </button>
+            <img
+              src={selectedImage}
+              alt="Product image"
+              className="max-w-full max-h-full object-contain"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

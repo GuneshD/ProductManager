@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useTenant } from '../../contexts/TenantContext';
@@ -11,7 +11,8 @@ import {
   LogOut, 
   Wifi, 
   WifiOff,
-  Globe
+  Globe,
+  ChevronDown
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -23,6 +24,27 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   const { currentUser, currentTenant, logout } = useTenant();
   const { isOffline, offlineActions } = useProducts();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const settingsRef = useRef<HTMLDivElement>(null);
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+    setIsSettingsOpen(false);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (settingsRef.current && !settingsRef.current.contains(event.target as Node)) {
+        setIsSettingsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const navigation = [
     {
@@ -39,20 +61,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     }
   ];
 
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="bg-deepBrown shadow-sm border-b border-deepBrown">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo and Title */}
             <div className="flex items-center">
-              <Package className="h-8 w-8 text-primary-600 mr-3" />
-              <h1 className="text-xl font-semibold text-gray-900">
+              <Package className="h-8 w-8 text-white mr-3" />
+              <h1 className="text-xl font-semibold text-white">
                 {t('products.title')}
               </h1>
             </div>
@@ -67,8 +85,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     to={item.href}
                     className={`inline-flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                       item.current
-                        ? 'text-primary-600 bg-primary-50'
-                        : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                        ? 'text-white bg-black bg-opacity-20'
+                        : 'text-neutral-200 hover:text-white hover:bg-black hover:bg-opacity-10'
                     }`}
                   >
                     <Icon className="h-4 w-4 mr-2" />
@@ -83,46 +101,89 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               {/* Connection Status */}
               <div className="flex items-center space-x-2">
                 {isOffline ? (
-                  <div className="flex items-center text-red-600">
+                  <div className="flex items-center text-red-300">
                     <WifiOff className="h-4 w-4 mr-1" />
                     <span className="text-xs font-medium">Offline</span>
                     {offlineActions.length > 0 && (
-                      <span className="ml-1 bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">
+                      <span className="ml-1 bg-red-200 text-red-800 text-xs px-2 py-1 rounded-full">
                         {offlineActions.length}
                       </span>
                     )}
                   </div>
                 ) : (
-                  <div className="flex items-center text-green-600">
+                  <div className="flex items-center text-green-300">
                     <Wifi className="h-4 w-4 mr-1" />
                     <span className="text-xs font-medium">Online</span>
                   </div>
                 )}
               </div>
 
-              {/* Language Selector */}
-              <div className="relative">
-                <select
-                  value={i18n.language}
-                  onChange={(e) => changeLanguage(e.target.value)}
-                  className="appearance-none bg-white border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              {/* Settings Dropdown */}
+              <div className="relative" ref={settingsRef}>
+                <button
+                  onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                  className="p-2 text-neutral-200 hover:text-white transition-colors rounded-md hover:bg-black hover:bg-opacity-10"
+                  title="Settings"
                 >
-                  <option value="en">EN</option>
-                  <option value="hi">हि</option>
-                  <option value="mr">मर</option>
-                </select>
-                <Globe className="absolute right-1 top-1/2 transform -translate-y-1/2 h-3 w-3 text-gray-400 pointer-events-none" />
+                  <Settings className="h-5 w-5" />
+                </button>
+                
+                {isSettingsOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-neutral-200 z-50">
+                    <div className="py-1">
+                      <div className="px-4 py-2 text-sm font-medium text-neutral-700 border-b border-neutral-100">
+                        {t('settings.language')}
+                      </div>
+                      <button
+                        onClick={() => changeLanguage('en')}
+                        className={`w-full text-left px-4 py-2 text-sm hover:bg-neutral-50 flex items-center justify-between ${
+                          i18n.language === 'en' ? 'text-earthGreen font-medium' : 'text-neutral-700'
+                        }`}
+                      >
+                        <span className="flex items-center">
+                          <Globe className="h-4 w-4 mr-2" />
+                          English
+                        </span>
+                        {i18n.language === 'en' && <span className="text-earthGreen">✓</span>}
+                      </button>
+                      <button
+                        onClick={() => changeLanguage('hi')}
+                        className={`w-full text-left px-4 py-2 text-sm hover:bg-neutral-50 flex items-center justify-between ${
+                          i18n.language === 'hi' ? 'text-earthGreen font-medium' : 'text-neutral-700'
+                        }`}
+                      >
+                        <span className="flex items-center">
+                          <Globe className="h-4 w-4 mr-2" />
+                          हिंदी
+                        </span>
+                        {i18n.language === 'hi' && <span className="text-earthGreen">✓</span>}
+                      </button>
+                      <button
+                        onClick={() => changeLanguage('mr')}
+                        className={`w-full text-left px-4 py-2 text-sm hover:bg-neutral-50 flex items-center justify-between ${
+                          i18n.language === 'mr' ? 'text-earthGreen font-medium' : 'text-neutral-700'
+                        }`}
+                      >
+                        <span className="flex items-center">
+                          <Globe className="h-4 w-4 mr-2" />
+                          मराठी
+                        </span>
+                        {i18n.language === 'mr' && <span className="text-earthGreen">✓</span>}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* User Menu */}
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-2">
-                  <User className="h-5 w-5 text-gray-400" />
+                  <User className="h-5 w-5 text-neutral-200" />
                   <div className="text-sm">
-                    <div className="font-medium text-gray-900">
+                    <div className="font-medium text-white">
                       {currentUser?.name || 'User'}
                     </div>
-                    <div className="text-gray-500 text-xs">
+                    <div className="text-neutral-200 text-xs">
                       {currentTenant?.name || 'No Tenant'}
                     </div>
                   </div>
@@ -130,7 +191,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 
                 <button
                   onClick={logout}
-                  className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="p-2 text-neutral-200 hover:text-white transition-colors"
                   title="Logout"
                 >
                   <LogOut className="h-4 w-4" />
@@ -141,7 +202,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
 
         {/* Mobile Navigation */}
-        <div className="md:hidden border-t border-gray-200">
+        <div className="md:hidden border-t border-black border-opacity-20">
           <div className="px-4 py-3 space-y-1">
             {navigation.map((item) => {
               const Icon = item.icon;
@@ -151,8 +212,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   to={item.href}
                   className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                     item.current
-                      ? 'text-primary-600 bg-primary-50'
-                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                      ? 'text-white bg-black bg-opacity-20'
+                      : 'text-neutral-200 hover:text-white hover:bg-black hover:bg-opacity-10'
                   }`}
                 >
                   <Icon className="h-4 w-4 mr-3" />

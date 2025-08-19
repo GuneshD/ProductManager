@@ -25,6 +25,9 @@
     "dashboard": "डैशबोर्ड",
     "settings": "सेटिंग्स"
   },
+  "settings": {
+    "language": "भाषा"
+  },
   "products": {
     "title": "उत्पाद प्रबंधक",
     "category": "श्रेणी",

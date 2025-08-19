@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { ProductSKU, Category, ProductGroup, ProductFilters, SortConfig, OfflineAction } from '../types';
 import { useTenant } from './TenantContext';
-import { toast } from 'react-hot-toast';
+import { toast, showWarning } from '../utils/notifications';
 import localForage from 'localforage';
 
 interface ProductContextType {
@@ -63,7 +63,7 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
 
     const handleOffline = () => {
       setIsOffline(true);
-      toast.error('You are offline. Changes will be synced when connection is restored.');
+      showWarning('You are offline. Changes will be synced when connection is restored.');
     };
 
     window.addEventListener('online', handleOnline);
@@ -200,11 +200,13 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
   };
 
   const fetchProducts = async () => {
+    console.log('fetchProducts called');
     setLoading(true);
     setError(null);
     
     try {
       const tenantId = getTenantId();
+      console.log('Tenant ID:', tenantId);
       if (!tenantId) {
         throw new Error('No tenant ID available');
       }
@@ -230,10 +232,12 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
         // In a real app, this would be an API call
         // For now, use mock data and cache it
         const { mockCategories, mockGroups, mockProducts } = generateMockData();
+        console.log('Generated mock products:', mockProducts);
         
         setCategories(mockCategories);
         setGroups(mockGroups);
         setProducts(mockProducts);
+        console.log('Products state updated with:', mockProducts.length, 'products');
         
         // Cache the data for offline use
         await localForage.setItem('products', mockProducts);
@@ -408,10 +412,17 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
     setError(null);
   };
 
-  // Load products on mount
+  // Load products on mount, but only after tenant is available
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    const tenantId = getTenantId();
+    console.log('useEffect triggered, tenantId:', tenantId);
+    if (tenantId) {
+      console.log('Calling fetchProducts...');
+      fetchProducts();
+    } else {
+      console.log('No tenant ID available, skipping fetchProducts');
+    }
+  }, [getTenantId]);
 
   const value: ProductContextType = {
     products,

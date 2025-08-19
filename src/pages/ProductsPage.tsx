@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useProducts } from '../contexts/ProductContext';
 // import { useTenant } from '../contexts/TenantContext'; // Will be used for tenant-specific operations
 import { ProductSKU, ProductFormData, ProductFilters, SortConfig, TableColumn, EntityStatus } from '../types';
-import { Plus, Download, RefreshCw, Filter } from 'lucide-react';
+import { Plus, Download, RefreshCw, Filter, Columns } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import ProductTable from '../components/ProductTable/ProductTable';
 import ProductForm from '../components/ProductForm/ProductForm';
@@ -23,7 +23,7 @@ const ProductsPage: React.FC = () => {
   // const { getTenantId } = useTenant(); // Will be used for tenant-specific operations
 
   const [filters, setFilters] = useState<ProductFilters>({
-    search: '',
+    search: undefined,
     status: undefined,
     uom: undefined,
     group_id: undefined,
@@ -41,18 +41,42 @@ const ProductsPage: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(25);
+  const [showColumnPanel, setShowColumnPanel] = useState(false);
+  const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>({});
 
   // Table columns configuration
-  const columns: TableColumn[] = [
+  const allColumns: TableColumn[] = [
     { id: 'product_sku_name', header: t('products.name'), label: t('products.name'), key: 'product_sku_name', accessorKey: 'product_sku_name', type: 'text' },
     { id: 'product_sku_id', header: t('products.skuId'), label: t('products.skuId'), key: 'product_sku_id', accessorKey: 'product_sku_id', type: 'text' },
     { id: 'uom', header: t('products.uom'), label: t('products.uom'), key: 'uom', accessorKey: 'uom', type: 'text' },
     { id: 'uom_value', header: t('products.uomValue'), label: t('products.uomValue'), key: 'uom_value', accessorKey: 'uom_value', type: 'number' },
     { id: 'is_box', header: t('products.isBox'), label: t('products.isBox'), key: 'is_box', accessorKey: 'is_box', type: 'select' },
     { id: 'is_combo', header: t('products.isCombo'), label: t('products.isCombo'), key: 'is_combo', accessorKey: 'is_combo', type: 'select' },
+    { id: 'product_sku_image', header: t('product.productImage'), label: t('product.productImage'), key: 'product_sku_image', accessorKey: 'product_sku_image', type: 'text' },
     { id: 'sku_status', header: t('products.status'), label: t('products.status'), key: 'sku_status', accessorKey: 'sku_status', type: 'select' },
     { id: 'created_at', header: t('common.createdAt'), label: t('common.createdAt'), key: 'created_at', accessorKey: 'created_at', type: 'text' }
   ];
+
+  // Initialize visible columns on first render
+  useEffect(() => {
+    if (Object.keys(visibleColumns).length === 0) {
+      const initialVisibility = allColumns.reduce((acc, column) => {
+        acc[column.id] = true; // All columns visible by default
+        return acc;
+      }, {} as Record<string, boolean>);
+      setVisibleColumns(initialVisibility);
+    }
+  }, [allColumns, visibleColumns]);
+
+  // Filter columns based on visibility
+  const visibleColumnsArray = allColumns.filter(column => visibleColumns[column.id]);
+
+  const toggleColumnVisibility = (columnId: string) => {
+    setVisibleColumns(prev => ({
+      ...prev,
+      [columnId]: !prev[columnId]
+    }));
+  };
 
   // Filter and sort products
   const filteredProducts = products.filter(product => {
@@ -150,7 +174,27 @@ const ProductsPage: React.FC = () => {
         parent_product_sku_id: data.sku.parent_product_sku_id,
         sku_status: data.sku.status,
         product_sku_image: data.sku.image,
-        product_group_id: '', // This should be set based on group selection
+        product_group_id: `group-${Date.now()}`, // Generate a group ID based on group name
+        product_group: {
+          id: `group-${Date.now()}`,
+          product_group_name: data.group.name,
+          product_group_image: data.group.image || '',
+          tenant_id: '',
+          created_by: '',
+          created_on: new Date(),
+          modified_by: '',
+          modified_on: new Date(),
+          category: {
+            id: `cat-${Date.now()}`,
+            catg_name: data.category.name,
+            catg_status: data.category.status,
+            tenant_id: '',
+            created_by: '',
+            created_on: new Date(),
+            modified_by: '',
+            modified_on: new Date()
+          }
+        }
       };
 
       if (editingProduct) {
@@ -180,14 +224,31 @@ const ProductsPage: React.FC = () => {
   };
 
   const exportToCSV = () => {
-    const headers = ['Product Name', 'SKU ID', 'UOM', 'UOM Value', 'Status', 'Group'].join(',');
+    const headers = [
+      'Product Name', 'SKU ID', 'UOM', 'UOM Value', 'Status', 'Group', 'Category',
+      'Is Box', 'In Box Units', 'Is Combo', 'Parent SKU ID', 'Product Image',
+      'Group Image', 'Tenant ID', 'Created By', 'Created On', 'Modified By', 'Modified On'
+    ].join(',');
+    
     const rows = sortedProducts.map(product => [
       product.product_sku_name,
       product.product_sku_id,
       product.uom,
       product.uom_value,
       product.sku_status,
-      product.product_group?.product_group_name || ''
+      product.product_group?.product_group_name || '',
+      product.product_group?.category?.catg_name || '',
+      product.is_box,
+      product.in_box_units || '',
+      product.is_combo,
+      product.parent_product_sku_id || '',
+      product.product_sku_image || '',
+      product.product_group?.product_group_image || '',
+      product.tenant_id,
+      product.created_by,
+      new Date(product.created_on).toISOString(),
+      product.modified_by,
+      new Date(product.modified_on).toISOString()
     ].map(value => 
       typeof value === 'string' && value.includes(',') ? `"${value}"` : value
     ).join(','));
@@ -211,10 +272,10 @@ const ProductsPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-neutral-900">
             {t('products.title')}
           </h1>
-          <p className="mt-1 text-sm text-gray-600">
+          <p className="mt-1 text-sm text-neutral-600">
             Manage your product catalog with categories, groups, and SKUs
           </p>
         </div>
@@ -224,8 +285,8 @@ const ProductsPage: React.FC = () => {
             onClick={() => setShowFilters(!showFilters)}
             className={`inline-flex items-center px-4 py-2 border rounded-md text-sm font-medium transition-colors ${
               showFilters
-                ? 'border-primary-300 text-primary-700 bg-primary-50'
-                : 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50'
+                ? 'border-skyBlue text-white bg-skyBlue'
+                : 'border-neutral-300 text-neutral-700 bg-white hover:bg-neutral-50'
             }`}
           >
             <Filter className="h-4 w-4 mr-2" />
@@ -235,7 +296,7 @@ const ProductsPage: React.FC = () => {
           <button
             onClick={fetchProducts}
             disabled={loading}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="inline-flex items-center px-4 py-2 border border-neutral-300 rounded-md text-sm font-medium text-neutral-700 bg-white hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
             {t('common.refresh')}
@@ -243,15 +304,80 @@ const ProductsPage: React.FC = () => {
           
           <button
             onClick={exportToCSV}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+            className="inline-flex items-center px-4 py-2 border border-neutral-300 rounded-md text-sm font-medium text-neutral-700 bg-white hover:bg-neutral-50 transition-colors"
           >
             <Download className="h-4 w-4 mr-2" />
             {t('products.export')}
           </button>
           
+          <div className="relative">
+            <button
+              onClick={() => setShowColumnPanel(!showColumnPanel)}
+              className={`inline-flex items-center px-4 py-2 border rounded-md text-sm font-medium transition-colors ${
+                showColumnPanel
+                  ? 'border-skyBlue text-white bg-skyBlue'
+                  : 'border-neutral-300 text-neutral-700 bg-white hover:bg-neutral-50'
+              }`}
+            >
+              <Columns className="h-4 w-4 mr-2" />
+              {t('products.columns')}
+            </button>
+            
+            {showColumnPanel && (
+              <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                <div className="p-4">
+                  <h3 className="text-sm font-medium text-gray-900 mb-3">
+                    {t('products.columnVisibility')}
+                  </h3>
+                  <div className="space-y-2">
+                    {allColumns.map((column) => (
+                      <label key={column.id} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={visibleColumns[column.id] || false}
+                          onChange={() => toggleColumnVisibility(column.id)}
+                          className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                        />
+                        <span className="ml-2 text-sm text-gray-700">
+                          {column.label}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-gray-200 flex justify-between">
+                    <button
+                      onClick={() => {
+                        const allVisible = allColumns.reduce((acc, column) => {
+                          acc[column.id] = true;
+                          return acc;
+                        }, {} as Record<string, boolean>);
+                        setVisibleColumns(allVisible);
+                      }}
+                      className="text-xs text-earthGreen hover:text-green-700"
+                    >
+                      {t('common.selectAll')}
+                    </button>
+                    <button
+                      onClick={() => {
+                        const noneVisible = allColumns.reduce((acc, column) => {
+                          acc[column.id] = false;
+                          return acc;
+                        }, {} as Record<string, boolean>);
+                        setVisibleColumns(noneVisible);
+                      }}
+                      className="text-xs text-neutral-600 hover:text-neutral-800"
+                    >
+                      {t('common.selectNone')}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          
           <button
             onClick={handleAddProduct}
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 transition-colors"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-earthGreen hover:bg-green-600 transition-colors"
           >
             <Plus className="h-4 w-4 mr-2" />
             {t('products.addProduct')}
@@ -261,29 +387,29 @@ const ProductsPage: React.FC = () => {
 
       {/* Filters */}
       {showFilters && (
-        <div className="bg-white border border-gray-200 rounded-lg p-6">
+        <div className="bg-white border border-neutral-200 rounded-lg p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-formGray mb-1">
                 {t('products.search')}
               </label>
               <input
                 type="text"
                 value={filters.search || ''}
                 onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value || undefined }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-earthGreen"
                 placeholder={t('products.searchPlaceholder')}
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-formGray mb-1">
                 {t('products.status')}
               </label>
               <select
                 value={filters.status || ''}
                 onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value as EntityStatus || undefined }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-earthGreen"
               >
                 <option value="">{t('common.all')}</option>
                 <option value="active">{t('common.active')}</option>
@@ -294,7 +420,7 @@ const ProductsPage: React.FC = () => {
             <div className="md:col-span-3 lg:col-span-4">
               <button
                 onClick={handleClearFilters}
-                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+                className="px-4 py-2 text-sm text-neutral-600 hover:text-neutral-800"
               >
                 {t('common.clearFilters')}
               </button>
@@ -305,11 +431,11 @@ const ProductsPage: React.FC = () => {
 
       {/* Products Table */}
       {error ? (
-        <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
+        <div className="bg-white border border-neutral-200 rounded-lg p-8 text-center">
           <p className="text-red-600">{error}</p>
           <button
             onClick={fetchProducts}
-            className="mt-2 text-primary-600 hover:text-primary-800"
+            className="mt-2 text-earthGreen hover:text-green-700"
           >
             {t('common.retry')}
           </button>
@@ -318,7 +444,7 @@ const ProductsPage: React.FC = () => {
         <>
           <ProductTable
             products={paginatedProducts}
-            columns={columns}
+            columns={visibleColumnsArray}
             onEdit={handleEditProduct}
             onDelete={handleDeleteProduct}
             onUpdate={handleUpdateProduct}

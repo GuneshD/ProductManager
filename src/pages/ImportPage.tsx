@@ -4,7 +4,7 @@ import { useProducts } from '../contexts/ProductContext';
 import { useTenant } from '../contexts/TenantContext';
 import { CSVProductData, EntityStatus, UOMType, YesNo } from '../types';
 import { Upload, Download, FileText, AlertCircle, CheckCircle } from 'lucide-react';
-import { toast } from 'react-hot-toast';
+import { toast, showWarning } from '../utils/notifications';
 
 interface ImportResult {
   success: boolean;
@@ -139,7 +139,7 @@ const ImportPage: React.FC = () => {
       setShowPreview(true);
       toast.success(`Preview loaded: ${data.length} rows found`);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to parse CSV');
+      showWarning(error instanceof Error ? error.message : 'Failed to parse CSV');
     }
   };
 
@@ -212,7 +212,7 @@ const ImportPage: React.FC = () => {
       if (result.success) {
         toast.success(t('import.importSuccess'));
       } else {
-        toast.error(`Import completed with ${result.errors.length} errors`);
+        showWarning(`Import completed with ${result.errors.length} errors`);
       }
     } catch (error) {
       setImportResult({
