@@ -21,7 +21,9 @@
     "refresh": "रीफ्रेश",
     "selectAll": "सभी चुनें",
     "selectNone": "कोई नहीं चुनें",
-    "columns": "कॉलम"
+    "columns": "कॉलम",
+    "filters": "फ़िल्टर",
+    "actions": "क्रियाएं"
   },
   "navigation": {
     "import": "आयात",

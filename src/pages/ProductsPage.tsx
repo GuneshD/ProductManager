@@ -297,7 +297,7 @@ const ProductsPage: React.FC = () => {
             }`}
           >
             <Filter className="h-4 w-4 mr-2" />
-            {t('products.filters')}
+            {t('common.filters')}
           </button>
           
           <button
@@ -314,7 +314,7 @@ const ProductsPage: React.FC = () => {
             className="inline-flex items-center px-4 py-2 border border-neutral-300 rounded-md text-sm font-medium text-neutral-700 bg-white hover:bg-neutral-50 transition-colors"
           >
             <Download className="h-4 w-4 mr-2" />
-            {t('products.export')}
+            {t('common.export')}
           </button>
           
           <div className="relative">
@@ -327,7 +327,7 @@ const ProductsPage: React.FC = () => {
               }`}
             >
               <Columns className="h-4 w-4 mr-2" />
-              {t('products.columns')}
+              {t('common.columns')}
             </button>
             
             {showColumnPanel && (

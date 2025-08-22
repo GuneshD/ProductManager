@@ -21,7 +21,9 @@
     "refresh": "Refresh",
     "selectAll": "Select All",
     "selectNone": "Select None",
-    "columns": "Columns"
+    "columns": "Columns",
+    "filters": "Filters",
+    "actions": "Actions"
   },
   "navigation": {
     "import": "Import",

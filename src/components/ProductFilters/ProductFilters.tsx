@@ -33,7 +33,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
         <div className="flex items-center space-x-2">
           <Filter className="h-5 w-5 text-neutral-500" />
           <h3 className="text-lg font-medium text-neutral-900">
-            {t('products.filters')}
+            {t('common.filters')}
           </h3>
         </div>
         {hasActiveFilters && (

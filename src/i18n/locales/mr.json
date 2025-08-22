@@ -19,9 +19,11 @@
     "inactive": "निष्क्रिय",
     "paused": "थांबवले",
     "refresh": "रीफ्रेश",
-    "selectAll": "सर्व निवडा",
+    "selectAll": "सभी निवडा",
     "selectNone": "काहीही निवडू नका",
-    "columns": "स्तंभ"
+    "columns": "कॉलम",
+    "filters": "फिल्टर",
+    "actions": "क्रिया"
   },
   "navigation": {
     "import": "आयात",

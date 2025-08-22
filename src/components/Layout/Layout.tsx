@@ -235,7 +235,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center text-sm text-gray-500">
             <div>
-              © 2024 Product Manager PWA. All rights reserved.
+              © 2025 Products Manager PWA. All rights reserved.
             </div>
             <div className="flex items-center space-x-4">
               <span>Tenant: {currentTenant?.name}</span>

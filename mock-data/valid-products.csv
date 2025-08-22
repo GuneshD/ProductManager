@@ -1,11 +1,11 @@
-productId,name,mrp,currency,category,description
-PROD001,Wireless Headphones,2999.99,INR,Electronics,Premium wireless headphones with noise cancellation
-PROD002,Smartphone Case,599.50,INR,Accessories,Protective case for smartphones
-PROD003,Bluetooth Speaker,1499.00,INR,Electronics,Portable bluetooth speaker with bass boost
-PROD004,USB Cable,299.99,INR,Accessories,High-speed USB-C charging cable
-PROD005,Power Bank,1899.00,INR,Electronics,10000mAh portable power bank
-PROD006,Screen Protector,199.99,INR,Accessories,Tempered glass screen protector
-PROD007,Wireless Mouse,899.00,INR,Electronics,Ergonomic wireless mouse with precision tracking
-PROD008,Keyboard,1299.99,INR,Electronics,Mechanical keyboard with RGB lighting
-PROD009,Webcam,2199.00,INR,Electronics,HD webcam for video conferencing
-PROD010,Tablet Stand,499.99,INR,Accessories,Adjustable tablet stand for desk use
+productId,name,mrp,currency,category,description,pricelist_id
+PROD001,Wireless Headphones,2999.99,INR,Electronics,Premium wireless headphones with noise cancellation,PL001
+PROD002,Smartphone Case,599.50,INR,Accessories,Protective case for smartphones,PL001
+PROD003,Bluetooth Speaker,1499.00,INR,Electronics,Portable bluetooth speaker with bass boost,PL002
+PROD004,USB Cable,299.99,INR,Accessories,High-speed USB-C charging cable,PL001
+PROD005,Power Bank,1899.00,INR,Electronics,10000mAh portable power bank,PL002
+PROD006,Screen Protector,199.99,INR,Accessories,Tempered glass screen protector,PL001
+PROD007,Wireless Mouse,899.00,INR,Electronics,Ergonomic wireless mouse with precision tracking,PL003
+PROD008,Keyboard,1299.99,INR,Electronics,Mechanical keyboard with RGB lighting,PL003
+PROD009,Webcam,2199.00,INR,Electronics,HD webcam for video conferencing,PL002
+PROD010,Tablet Stand,499.99,INR,Accessories,Adjustable tablet stand for desk use,PL001

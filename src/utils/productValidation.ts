@@ -1,7 +1,7 @@
 import { ProductSKU, ValidatedProduct, ValidationResult, ValidationSummary, ImportAction, ValidationStatus } from '../types';
 
 // Allowed currencies
-const ALLOWED_CURRENCIES = ['Rs', 'EUR'];
+const ALLOWED_CURRENCIES = ['INR', 'EUR'];
 
 /**
  * Validates a single product record
